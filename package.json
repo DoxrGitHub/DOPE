@@ -1,5 +1,13 @@
 {
+  "scripts": {
+    "build": "npx esbuild dope.js --bundle --outfile=dist/dope.bundle.js --minify",
+    "web-build": "npx esbuild dope.js --bundle --format=esm --platform=browser --target=esnext --outfile=dist/dope.web.js --minify"
+  },
   "dependencies": {
     "commander": "^13.1.0"
-  }
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.0"
+  },
+  "type": "module"
 }

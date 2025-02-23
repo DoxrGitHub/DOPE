@@ -1,6 +1,6 @@
-const millerRabin = require('./miller-rabin.js');
-const modPow = require('./modPow.js');
-const eea = require('./eea.js');
+import millerRabin from './miller-rabin.js';
+import modPow from './modPow.js';
+import eea from './eea.js';
 
 /*
 * Generates a DOPE key and returns it in JSON format
@@ -8,7 +8,7 @@ const eea = require('./eea.js');
 * @returns {{p: bigint, q: bigint, N: bigint, phiN: bigint, e: bigint, d: bigint}} The DOPE key components.
 * @throws {Error} If a valid 'e' is not found.
 */
-function generation(bitRange = 512n) {
+export function generation(bitRange = 512n) {
     bitRange = BigInt(bitRange)
     const p = generatePrime(bitRange); 
     const q = generatePrime(bitRange); 
@@ -84,7 +84,7 @@ function getRandomItem(array) {
  * @param {bigint} N - The N (found in both certificates)
  * @returns {bigint} The encrypted message.
  */
-function encrypt(message, e, N) {
+export function encrypt(message, e, N) {
     return modPow(BigInt(message), e, N); // c = m^e mod N
 }
 
@@ -96,12 +96,12 @@ function encrypt(message, e, N) {
  * @param {bigint} q - q value (found in private certificate)
  * @returns {bigint} The decrypted message.
  */
-function CRTdecrypt(encrypted, d, p, q) {
+export function CRTdecrypt(encrypted, d, p, q) {
     let K = modPow(BigInt(encrypted), BigInt(d), BigInt(p))
     let L = modPow(BigInt(encrypted), BigInt(d), BigInt(q))
     
     let qRes = eea(q, p)
-    J = qRes.x
+    let J = qRes.x
 
     if (J < 0) {
         J += p;
@@ -134,7 +134,7 @@ function generateSmallPrimes(limit) {
 
 function smallPrimeTest(num) {
     let primes = generateSmallPrimes(1000);
-    for (prime of primes) {
+    for (let prime of primes) {
         if (num % prime === 0n) return false;
     }
     return true
@@ -145,8 +145,4 @@ function millerRabinProxy(num) {
     return millerRabin(num);
 }
 
-module.exports = {
-    generation,
-    encrypt,
-    decrypt: CRTdecrypt
-};
+export { CRTdecrypt as decrypt };

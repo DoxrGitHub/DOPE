@@ -72,4 +72,4 @@ function eea(gcdA, gcdB) {
     }
 }
 
-module.exports = eea;
+export default eea;

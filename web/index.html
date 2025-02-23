@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOPE</title>
+    <style>
+        :root {
+            --primary: #2250F4;
+            --text: #1A1A1A;
+            --background: #FFFFFF;
+            --secondary-bg: #F7F7F8;
+            --border: #E5E5E5;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: var(--background);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 4rem 0;
+            background: var(--secondary-bg);
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 1rem;
+        }
+
+        .content-section {
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .test-area {
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            min-height: 100px;
+        }
+
+        textarea {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            min-height: 100px;
+            position: relative;
+            margin-right: 1rem;
+            font-family: monospace;
+        }
+
+        code {
+            background: var(--secondary-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>DOPE</h1>
+            <div class="subtitle">Doxr Open Protocol Encryption</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="content-section">
+            <h2>Context</h2>
+            <p>This is an assymetric encryption method that I made from "scratch," for fun/learning. Fundamentally, it is RSA but with my own methods implementation details. I ended up calling the end result DOPE.</p>
+            <p>Now obviously, it's not the most secure thing out there, and a lot of features that make actual RSA so great and widely implemented aren't probably something that DOPE has.</p>
+            <p>But I'm still low-key proud of it since this is my first time making something assymetric.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>How to Use</h2>
+            <p></p>
+        </section>
+
+        <section class="content-section">
+            <h2>Try It Out</h2>
+            <div class="test-area">
+                <h3>Input your certificates</h3>
+                <textarea id="publicCertificate" placeholder="-----BEGIN PUBLIC DOPE CERTIFICATE-----"></textarea>
+                <textarea id="privateCertificate" placeholder="-----BEGIN PRIVATE DOPE CERTIFICATE-----"></textarea>
+                <button onclick="window.generate(BigInt(document.getElementById('bits').value))">Generate New Certificates</button>
+                <p>Prime lengths (default: 1024 bit)</p>
+                <input id="bits" type="number" value="1024">
+                <h3>Input a string</h3>
+                <input id="stringinput" placeholder="Enter a string to process..">
+                <br>
+                <br>
+                <div>
+                    <button onclick="encrypt()">Encrypt</button>
+                    <button onclick="decrypt()">Decrypt</button>
+                </div>
+                <div id="result"></div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { generation, encrypt, decrypt } from './dope.web.js';
+    
+        const keys = generation();
+        console.log('Generated Keys:', keys);
+    
+        const message = string_to_int("Man do I love men");
+        
+        const encrypted = encrypt(message, keys.e, keys.N);
+        console.log('Encrypted:', encrypted.toString());
+    
+        const decrypted = decrypt(encrypted, keys.d, keys.p, keys.q);
+        console.log('Decrypted:', int_to_string(decrypted));
+
+        function string_to_int(str) {
+            let hex = "";
+            for (let i = 0; i < str.length; i++) {
+                hex += str.charCodeAt(i).toString(16).padStart(2, '0');
+            }
+            return BigInt("0x" + hex);
+        }
+
+        function int_to_string(bigInt) {
+            let hex = bigInt.toString(16);
+            if (hex.length % 2 !== 0) hex = '0' + hex;
+            let str = "";
+            for (let i = 0; i < hex.length; i += 2) {
+                str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+            }
+            return str;
+        }
+
+        function generate(bitRange = 1024n) {
+            console.log(`Generating DOPE keys: ${bitRange} bits primes`);
+  let dope_json = generation(bitRange);
+  console.log(`Generated DOPE keys! Creating DOPE certificates...`);
+
+  const publicKey = { N: dope_json.N + "", e: dope_json.e + "" };
+  const privateKey = {
+    N: dope_json.N + "",
+    e: dope_json.e + "",
+    p: dope_json.p + "",
+    q: dope_json.q + "",
+    d: dope_json.d + "",
+  };
+
+  const encodeBase64 = (str) => btoa(str);
+
+  let publicCert = `
+-----BEGIN PUBLIC DOPE CERTIFICATE-----
+${encodeBase64(
+    `
+DOPE Version: 1.0.0
+Key Length: ${bitRange}
+Encryption Method: DOPE
+Creation Timestamp: ${new Date().toUTCString()}
+`.trim()
+  )}
+
+${encodeBase64(JSON.stringify(publicKey))}
+-----END PUBLIC DOPE CERTIFICATE-----
+`.trim();
+
+  let privateCert = `
+-----BEGIN PRIVATE DOPE CERTIFICATE-----
+${encodeBase64(
+    `
+DOPE Version: 1.0.0
+Key Length: ${bitRange}
+Encryption Method: DOPE
+Creation Timestamp: ${new Date().toUTCString()}
+`.trim()
+  )}
+
+${encodeBase64(JSON.stringify(privateKey))}
+-----END PRIVATE DOPE CERTIFICATE-----
+`.trim();
+
+            document.getElementById("publicCertificate").value = publicCert;
+            document.getElementById("privateCertificate").value = privateCert;
+        }
+
+        window.generate = generate
+    </script>
+    <script>
+
+    </script>
+</body>
+</html>

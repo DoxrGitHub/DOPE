@@ -1,4 +1,4 @@
-function modPow(base, exponent, mod) {
+export default function modPow(base, exponent, mod) {
     let result = 1n;
     base = base % mod;
 
@@ -12,5 +12,3 @@ function modPow(base, exponent, mod) {
 
     return result;
 }
-
-module.exports = modPow;

@@ -1,4 +1,4 @@
-const modPow = require('./modPow.js');
+import modPow from './modPow.js';
 
 /**
  * Performs the Miller-Rabin primality test on a BigInt number.
@@ -28,7 +28,7 @@ function millerRabin(numberToTest) {
 
     let isComposite = false;
 
-    for (witness of witnesses) {
+    for (let witness of witnesses) {
 
         let x = BigInt(modPow(witness, d, n))
 
@@ -66,4 +66,4 @@ function millerRabin(numberToTest) {
     return !isComposite;
 }
 
-module.exports = millerRabin;
+export default millerRabin;
