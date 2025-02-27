@@ -1,7 +1,8 @@
 {
   "scripts": {
-    "build": "npx esbuild dope.js --bundle --outfile=dist/dope.bundle.js --minify",
-    "web-build": "npx esbuild dope.js --bundle --format=esm --platform=browser --target=esnext --outfile=dist/dope.web.js --minify"
+    "cjs-build": "npx esbuild dope.js --bundle --outfile=dist/dope-cjs.bundle.js --minify",
+    "build": "npx esbuild dope.js --bundle --format=esm --outfile=dist/dope.bundle.js --minify",
+    "web-build": "npx esbuild dope.js --bundle --format=esm --platform=browser --target=esnext --outfile=dist/dope-web.bundle.js --minify"
   },
   "dependencies": {
     "commander": "^13.1.0"
