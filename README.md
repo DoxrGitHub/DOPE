@@ -11,7 +11,9 @@ Since I made this, it obviously isn't interoperable with classic RSA tools, beca
 
 ## Try it out
 
-You can try it out at the GitHub Page for this. There is a web demo where you can supply or generate certificates in the DOPE format, and encrypt/decrypt messages using them.
+You can try it out at the [GitHub Page](https://doxrgithub.github.io/DOPE/web/) for this. It is a web demo where you can supply or generate certificates in the DOPE format, and encrypt/decrypt messages using them.
+
+https://doxrgithub.github.io/DOPE/web/
 
 There's also a `dope-cli.js` file that you can build with `esbuild` and use, but I didn't really work on it since realistically nobody would ever need it on their system.
 
